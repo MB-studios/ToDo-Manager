@@ -1,0 +1,14 @@
+@startuml
+abstract class Task {
+    ObjectId _id
+    String title
+    String description
+    boolean completed
+    Date createdAt
+    Date updatedAt
+}
+class SimpleTask
+class RecurringTask
+Task <|-- SimpleTask
+Task <|-- RecurringTask
+@enduml

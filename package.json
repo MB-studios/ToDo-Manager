@@ -1,0 +1,24 @@
+{
+	"name": "todo-manager",
+	"description": "Selfhosted manager for ToDo-tasks",
+	"version": "1.0.0",
+	"main": "server/src/server.ts",
+	"scripts": {
+		"build": "npm run build --prefix server",
+		"dev": "npm run dev --prefix server",
+		"start": "npm run start --prefix server"
+	},
+	"directories": {
+		"doc": "docs"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/MB-studios/ToDo-Manager.git"
+	},
+	"author": "",
+	"license": "ISC",
+	"bugs": {
+		"url": "https://github.com/MB-studios/ToDo-Manager/issues"
+	},
+	"homepage": "https://github.com/MB-studios/ToDo-Manager#readme"
+}
