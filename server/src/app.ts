@@ -3,8 +3,10 @@ import { Server, createServer } from 'http';
 import logger from 'morgan';
 import { initialize } from 'express-openapi';
 import { apiDoc } from './openapi';
+import fs from 'fs';
 import { controllers } from './controllers';
 import swaggerUi from 'swagger-ui-express';
+import { config } from './config/config';
 import { SwaggerTheme } from 'swagger-themes';
 import * as OpenApiValidator from 'express-openapi-validator';
 import connectDB from './db';
@@ -40,10 +42,21 @@ export class App {
 			operations: controllers,
 		});
 
+		fs.writeFile('exports/api-doc.json', JSON.stringify(OpenAPIFramework.apiDoc), (err) => {
+			if (err) {
+				console.log(err);
+			} else {
+				console.log('API documentation exported successfully');
+			}
+		});
+
 		this.app.use(
-			'/api-documentation',
+			'/',
 			swaggerUi.serve,
-			swaggerUi.setup(null, { swaggerUrl: 'http://localhost:3000/api-docs', customCss: theme.getBuffer('dark') })
+			swaggerUi.setup(null, {
+				swaggerUrl: `${config.server.url}:${config.server.port}/${config.server.apiBasePath}/api-docs`,
+				customCss: theme.getBuffer('dark'),
+			})
 		);
 
 		this.app.use(

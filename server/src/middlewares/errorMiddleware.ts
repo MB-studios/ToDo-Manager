@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import { ERROR_CODES } from '../../constants/error-codes';
+import { ERROR_CODES } from '../constants/error-codes';
 
 export const errorMiddleware = (error: any, req: Request, res: Response, next: NextFunction) => {
 	let { errors, type, status, errorCode, message, details } = error;

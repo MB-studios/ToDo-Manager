@@ -1,3 +1,4 @@
 {
-	"ext": ".js, .mjs,, .ts .json, .yaml, .env"
+	"ext": ".js, .mjs,, .ts .json, .yaml, .env",
+	"ignore": "/exports*"
 }

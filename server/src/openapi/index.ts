@@ -1,4 +1,5 @@
 import { OpenAPIV3 } from 'openapi-types';
+import { config } from '../config/config';
 import { paths } from './paths';
 import { schemas } from './components/schemas';
 import { parameters } from './parameters';
@@ -16,4 +17,10 @@ export const apiDoc: OpenAPIV3.Document = {
 		parameters,
 		responses,
 	},
+	servers: [
+		{
+			url: `${config.server.url}:${config.server.port}/${config.server.apiBasePath}`,
+			description: 'Development server',
+		},
+	],
 };
