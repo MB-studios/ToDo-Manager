@@ -32,10 +32,10 @@ export interface components {
     generic: boolean | Record<string, never> | number | string;
     /** Task */
     task: {
+      _id: string;
       title: string;
       description?: string;
       completed?: boolean;
-      _id?: string;
       /** Format: date-time */
       createdAt?: string;
       /** Format: date-time */
@@ -78,12 +78,7 @@ export interface operations {
       /** @description OK */
       200: {
         content: {
-          "application/json": {
-            status?: components["schemas"]["success"];
-            data?: {
-              tasks?: components["schemas"]["task"][];
-            };
-          };
+          "application/json": components["schemas"]["task"][];
         };
       };
     };

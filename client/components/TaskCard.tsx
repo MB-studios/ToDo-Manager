@@ -3,6 +3,11 @@ import { router } from 'expo-router';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { Card, Checkbox } from 'react-native-paper';
 
+type Props = {
+	item: any;
+	onPress: (item: any) => void;
+};
+
 const CompletedCheckBox = () => {
 	const [checked, setChecked] = React.useState(false);
 
@@ -13,22 +18,14 @@ const CompletedCheckBox = () => {
 	);
 };
 
-export const TaskCard = ({
-	objectId,
-	title,
-	description,
-}: {
-	objectId: string;
-	title: string;
-	description?: string;
-}) => (
+export const TaskCard = ({ item, onPress }: Props) => (
 	<Pressable
 		onPress={() => {
-			router.push(`/task/${objectId}`);
+			onPress(item);
 		}}
 	>
 		<Card style={styles.card}>
-			<Card.Title title={title} subtitle={description} right={() => <CompletedCheckBox />} />
+			<Card.Title title={item.title} subtitle={item.description} right={() => <CompletedCheckBox />} />
 		</Card>
 	</Pressable>
 );
@@ -40,6 +37,7 @@ const styles = StyleSheet.create({
 	checkBoxView: {
 		aspectRatio: 1,
 		flex: 1,
+		margin: 8,
 		justifyContent: 'center',
 		alignItems: 'center',
 	},

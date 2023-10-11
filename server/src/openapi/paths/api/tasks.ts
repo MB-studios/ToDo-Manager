@@ -11,20 +11,9 @@ export const tasks: OpenAPIV3.PathItemObject = {
 				content: {
 					'application/json': {
 						schema: {
-							type: 'object',
-							properties: {
-								status: { $ref: '#/components/schemas/success' },
-								data: {
-									type: 'object',
-									properties: {
-										tasks: {
-											type: 'array',
-											items: {
-												$ref: '#/components/schemas/task',
-											},
-										},
-									},
-								},
+							type: 'array',
+							items: {
+								$ref: '#/components/schemas/task',
 							},
 						},
 					},

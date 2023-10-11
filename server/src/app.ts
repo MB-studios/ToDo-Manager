@@ -1,4 +1,5 @@
 import { Application, json, urlencoded } from 'express';
+import cors from 'cors';
 import { Server, createServer } from 'http';
 import logger from 'morgan';
 import { initialize } from 'express-openapi';
@@ -31,6 +32,7 @@ export class App {
 
 	private async composeMiddlewares(): Promise<void> {
 		this.app.use(logger('dev'));
+		this.app.use(cors());
 		this.app.use(json());
 		this.app.use(urlencoded({ extended: false }));
 	}

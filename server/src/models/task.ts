@@ -11,6 +11,10 @@ export interface ITaskModel extends ITask, Document {}
 
 const TaskSchema: Schema = new Schema(
 	{
+		_id: {
+			type: String,
+			required: true,
+		},
 		title: {
 			type: String,
 			required: true,
