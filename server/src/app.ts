@@ -42,11 +42,16 @@ export class App {
 			operations: controllers,
 		});
 
-		fs.writeFile('exports/api-doc.json', JSON.stringify(OpenAPIFramework.apiDoc), (err) => {
+		if (!fs.existsSync(config.server.exportsDir)) {
+			console.log(`Creating exports directory: ${config.server.exportsDir}`);
+			fs.mkdirSync(config.server.exportsDir);
+		}
+
+		fs.writeFile(`${config.server.exportsDir}/api-doc.json`, JSON.stringify(OpenAPIFramework.apiDoc), (err) => {
 			if (err) {
 				console.log(err);
 			} else {
-				console.log('API documentation exported successfully');
+				console.log(`API documentation exported successfully to: ${config.server.exportsDir}/api-doc.json`);
 			}
 		});
 
