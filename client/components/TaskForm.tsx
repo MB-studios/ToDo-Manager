@@ -8,14 +8,16 @@ import { TextInputWithErrors } from 'components/TextInputWithErrors';
 
 export type Task = components['schemas']['task'];
 
-const TaskForm = (props: Partial<Task>) => {
-	const { control, getValues, formState, handleSubmit, reset } = useForm<Task>({
-		defaultValues: props,
+const TaskForm = ({ task, getValueSetter }: { task: Partial<Task>; getValueSetter?: Function }) => {
+	const { control, getValues, formState, handleSubmit, reset, setValue } = useForm<Task>({
+		defaultValues: task,
 		mode: 'all',
 	});
 
+	getValueSetter && getValueSetter(setValue);
+
 	const redirect = () => {
-		props._id ? router.back() : router.push('');
+		task._id ? router.back() : router.push('');
 	};
 
 	const mutation = upsertTask(getValues, redirect);

@@ -12,7 +12,7 @@ export interface ITaskModel extends ITask, Document {}
 const TaskSchema: Schema = new Schema(
 	{
 		_id: {
-			type: String,
+			type: mongoose.Types.ObjectId,
 			default: () => {
 				return new mongoose.Types.ObjectId();
 			},

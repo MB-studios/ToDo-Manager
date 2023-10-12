@@ -35,8 +35,6 @@ export const createTask = async (req: Request, res: Response, next: NextFunction
 };
 
 export const updateTask = async (req: Request, res: Response, next: NextFunction) => {
-	console.log('updateTask');
-	console.log(req.params);
 	try {
 		const task = await Task.findByIdAndUpdate(req.params.objectId, req.body, { new: true });
 
