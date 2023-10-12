@@ -32,7 +32,7 @@ export interface components {
     generic: boolean | Record<string, never> | number | string;
     /** Task */
     task: {
-      _id: string;
+      _id?: string;
       title: string;
       description?: string;
       completed?: boolean;
@@ -47,12 +47,9 @@ export interface components {
     genericFail: {
       content: {
         "application/json": {
-          status?: components["schemas"]["fail"];
-          data?: {
-            errorCore?: string;
-            message?: string;
-            details?: components["schemas"]["generic"][];
-          };
+          errorCore?: string;
+          message?: string;
+          details?: string;
         };
       };
     };
@@ -81,6 +78,7 @@ export interface operations {
           "application/json": components["schemas"]["task"][];
         };
       };
+      "4XX": components["responses"]["genericFail"];
     };
   };
   /** Create a new task */
@@ -98,12 +96,7 @@ export interface operations {
       /** @description Created */
       201: {
         content: {
-          "application/json": {
-            status?: components["schemas"]["success"];
-            data?: {
-              task?: components["schemas"]["task"];
-            };
-          };
+          "application/json": components["schemas"]["task"];
         };
       };
       "4XX": components["responses"]["genericFail"];
@@ -120,12 +113,7 @@ export interface operations {
       /** @description OK */
       200: {
         content: {
-          "application/json": {
-            status?: components["schemas"]["success"];
-            data?: {
-              task?: components["schemas"]["task"];
-            };
-          };
+          "application/json": components["schemas"]["task"];
         };
       };
       "4XX": components["responses"]["genericFail"];
@@ -151,12 +139,7 @@ export interface operations {
       /** @description Updated */
       200: {
         content: {
-          "application/json": {
-            status?: components["schemas"]["success"];
-            data?: {
-              task?: components["schemas"]["task"];
-            };
-          };
+          "application/json": components["schemas"]["task"];
         };
       };
       "4XX": components["responses"]["genericFail"];
@@ -174,10 +157,7 @@ export interface operations {
       200: {
         content: {
           "application/json": {
-            status?: components["schemas"]["success"];
-            data?: {
-              task?: components["schemas"]["task"];
-            };
+            task?: components["schemas"]["task"];
           };
         };
       };

@@ -12,18 +12,7 @@ export const tasksId: OpenAPIV3.PathItemObject = {
 				content: {
 					'application/json': {
 						schema: {
-							type: 'object',
-							properties: {
-								status: { $ref: '#/components/schemas/success' },
-								data: {
-									type: 'object',
-									properties: {
-										task: {
-											$ref: '#/components/schemas/task',
-										},
-									},
-								},
-							},
+							$ref: '#/components/schemas/task',
 						},
 					},
 				},
@@ -57,18 +46,7 @@ export const tasksId: OpenAPIV3.PathItemObject = {
 				content: {
 					'application/json': {
 						schema: {
-							type: 'object',
-							properties: {
-								status: { $ref: '#/components/schemas/success' },
-								data: {
-									type: 'object',
-									properties: {
-										task: {
-											$ref: '#/components/schemas/task',
-										},
-									},
-								},
-							},
+							$ref: '#/components/schemas/task',
 						},
 					},
 				},
@@ -89,14 +67,8 @@ export const tasksId: OpenAPIV3.PathItemObject = {
 						schema: {
 							type: 'object',
 							properties: {
-								status: { $ref: '#/components/schemas/success' },
-								data: {
-									type: 'object',
-									properties: {
-										task: {
-											$ref: '#/components/schemas/task',
-										},
-									},
+								task: {
+									$ref: '#/components/schemas/task',
 								},
 							},
 						},

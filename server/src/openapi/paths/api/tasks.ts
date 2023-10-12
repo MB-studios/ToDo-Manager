@@ -19,6 +19,7 @@ export const tasks: OpenAPIV3.PathItemObject = {
 					},
 				},
 			},
+			['4XX']: { $ref: '#/components/responses/genericFail' },
 		},
 	},
 	post: {
@@ -46,18 +47,7 @@ export const tasks: OpenAPIV3.PathItemObject = {
 				content: {
 					'application/json': {
 						schema: {
-							type: 'object',
-							properties: {
-								status: { $ref: '#/components/schemas/success' },
-								data: {
-									type: 'object',
-									properties: {
-										task: {
-											$ref: '#/components/schemas/task',
-										},
-									},
-								},
-							},
+							$ref: '#/components/schemas/task',
 						},
 					},
 				},

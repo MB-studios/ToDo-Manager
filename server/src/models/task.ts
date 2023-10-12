@@ -13,7 +13,9 @@ const TaskSchema: Schema = new Schema(
 	{
 		_id: {
 			type: String,
-			required: true,
+			default: () => {
+				return new mongoose.Types.ObjectId();
+			},
 		},
 		title: {
 			type: String,

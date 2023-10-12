@@ -7,18 +7,9 @@ export const genericFail: OpenAPIV3.ResponseObject = {
 			schema: {
 				type: 'object',
 				properties: {
-					status: { $ref: '#/components/schemas/fail' },
-					data: {
-						type: 'object',
-						properties: {
-							errorCore: { type: 'string' },
-							message: { type: 'string' },
-							details: {
-								type: 'array',
-								items: { $ref: '#/components/schemas/generic' },
-							},
-						},
-					},
+					errorCore: { type: 'string' },
+					message: { type: 'string' },
+					details: { type: 'string' },
 				},
 			},
 		},
