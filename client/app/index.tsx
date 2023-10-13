@@ -40,6 +40,7 @@ export default function Tasks() {
 				data={data}
 				renderItem={renderItem}
 				keyExtractor={keyExtractor}
+				ListFooterComponent={<View style={{ height: 100 }} />}
 				refreshControl={<RefreshControl refreshing={isRefetchingByUser} onRefresh={refetchByUser} />}
 			></FlatList>
 		);

@@ -26,14 +26,15 @@ export default function TaskScreen() {
 			'Are you sure you want to delete this task?',
 			[
 				{
+					text: 'No',
+					style: 'cancel',
+					onPress: () => {},
+				},
+				{
 					text: 'Yes',
 					onPress: () => {
 						deleteMutation.mutate();
 					},
-				},
-				{
-					text: 'No',
-					onPress: () => {},
 				},
 			],
 			{ cancelable: true }

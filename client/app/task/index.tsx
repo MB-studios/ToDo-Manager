@@ -31,14 +31,14 @@ export default function AddTask() {
 					'You have unsaved changes. Would you like to stay?',
 					[
 						{
-							text: 'Yes',
-							onPress: () => {},
-						},
-						{
 							text: 'No',
 							onPress: () => {
 								navigation.dispatch(e.data.action);
 							},
+						},
+						{
+							text: 'Yes',
+							onPress: () => {},
 						},
 					],
 					{ cancelable: true }
