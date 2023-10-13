@@ -51,6 +51,7 @@ export default function TaskScreen() {
 			<Stack.Screen
 				options={{
 					title: data?.title,
+					animation: 'none',
 					headerRight: () => (
 						<IconButton
 							icon="lead-pencil"

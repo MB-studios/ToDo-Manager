@@ -51,6 +51,7 @@ export default function Tasks() {
 			<Stack.Screen
 				options={{
 					title: 'Tasks',
+					animation: 'none',
 					headerRight: () => <IconButton icon="magnify" onPress={() => console.log('search for tasks')} />,
 				}}
 			/>

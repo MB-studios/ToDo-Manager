@@ -51,7 +51,7 @@ export default function AddTask() {
 	}, [formState.isDirty, formState.isSubmitted, navigation]);
 	return (
 		<View style={FillStyleSheet.fillWithMargins}>
-			<Stack.Screen options={{ title: 'Add task' }} />
+			<Stack.Screen options={{ title: 'Add task', animation: 'none' }} />
 			<TaskForm
 				control={control}
 				onSubmit={handleSubmit(onSubmit)}

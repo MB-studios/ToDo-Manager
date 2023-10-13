@@ -74,7 +74,7 @@ export default function EditTask() {
 
 	return (
 		<View style={FillStyleSheet.fillWithMargins}>
-			<Stack.Screen options={{ title: 'Edit task' }} />
+			<Stack.Screen options={{ title: 'Edit task', animation: 'none' }} />
 			<TaskForm
 				control={control}
 				onSubmit={handleSubmit(onSubmit)}

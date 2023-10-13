@@ -1,6 +1,6 @@
 import { OpenAPIV3 } from 'openapi-types';
 
-export const tasksId: OpenAPIV3.PathItemObject = {
+export const taskId: OpenAPIV3.PathItemObject = {
 	get: {
 		summary: 'Get a task',
 		operationId: 'getTask',
