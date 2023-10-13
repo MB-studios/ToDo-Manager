@@ -9,6 +9,7 @@ type UseQueryOptions<T> = ParamsOption<T> &
 		reactQuery?: {};
 	};
 
+const TASK = '/task';
 const TASKS = '/tasks';
 
 export type Task = components['schemas']['task'];
@@ -28,8 +29,8 @@ export function getTask(_id: string, initialData?: Partial<Task>, onSuccess?: Fu
 	return useQuery({
 		queryKey: [TASKS, { _id }],
 		queryFn: async ({ signal }) => {
-			const { data, error } = await client.GET(`${TASKS}/{objectId}`, {
-				params: { path: { objectId: _id } },
+			const { data, error } = await client.GET(`${TASK}/{_id}`, {
+				params: { path: { _id } },
 				signal,
 			});
 			if (data) return data;
@@ -48,14 +49,14 @@ export function upsertTask(getValues: UseFormGetValues<Task>, onSuccess: Functio
 		mutationFn: async (): Promise<Task> => {
 			let values = getValues();
 			if (values._id) {
-				const { data, error } = await client.PUT(`${TASKS}/{objectId}`, {
-					params: { path: { objectId: values._id } },
+				const { data, error } = await client.PUT(`${TASK}/{_id}`, {
+					params: { path: { _id: values._id } },
 					body: values,
 				});
 				if (data) return data;
 				throw new Error(error.details);
 			} else {
-				const { data, error } = await client.POST(TASKS, { body: getValues() });
+				const { data, error } = await client.POST(TASK, { body: getValues() });
 				if (data) return data;
 				throw new Error(error.details);
 			}
@@ -70,8 +71,8 @@ export function deleteTask(_id: string, onSuccess: Function) {
 	return useMutation({
 		mutationKey: [TASKS, { _id }],
 		mutationFn: async (): Promise<void> => {
-			const { error } = await client.DELETE(`${TASKS}/{objectId}`, {
-				params: { path: { objectId: _id } },
+			const { error } = await client.DELETE(`${TASK}/{_id}`, {
+				params: { path: { _id } },
 			});
 			if (error) throw new Error(error.details);
 		},

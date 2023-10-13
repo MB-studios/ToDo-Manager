@@ -1,6 +1,6 @@
 import { OpenAPIV3 } from 'openapi-types';
-import { objectId } from './objectId';
+import { _id } from './_id';
 
 export const parameters: { [parameterName: string]: OpenAPIV3.ParameterObject } = {
-	objectId,
+	_id,
 };

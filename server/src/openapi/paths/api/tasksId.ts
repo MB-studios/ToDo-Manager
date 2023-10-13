@@ -5,7 +5,7 @@ export const tasksId: OpenAPIV3.PathItemObject = {
 		summary: 'Get a task',
 		operationId: 'getTask',
 		tags: ['tasks'],
-		parameters: [{ $ref: '#/components/parameters/objectId' }],
+		parameters: [{ $ref: '#/components/parameters/_id' }],
 		responses: {
 			['200']: {
 				description: 'OK',
@@ -24,7 +24,7 @@ export const tasksId: OpenAPIV3.PathItemObject = {
 		summary: 'Update a task',
 		operationId: 'updateTask',
 		tags: ['tasks'],
-		parameters: [{ $ref: '#/components/parameters/objectId' }],
+		parameters: [{ $ref: '#/components/parameters/_id' }],
 		requestBody: {
 			content: {
 				'application/json': {
@@ -58,7 +58,7 @@ export const tasksId: OpenAPIV3.PathItemObject = {
 		summary: 'Delete a task',
 		operationId: 'deleteTask',
 		tags: ['tasks'],
-		parameters: [{ $ref: '#/components/parameters/objectId' }],
+		parameters: [{ $ref: '#/components/parameters/_id' }],
 		responses: {
 			['200']: {
 				description: 'Deleted',

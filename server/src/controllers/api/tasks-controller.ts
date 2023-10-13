@@ -14,8 +14,8 @@ export const getTasks = async (req: Request, res: Response, next: NextFunction) 
 
 export const getTask = async (req: Request, res: Response, next: NextFunction) => {
 	try {
-		let task = await Task.findById(req.params.objectId);
-		if (!task) throw new HttpError(404, 'Task not found', `objectId: ${req.params.objectId}`);
+		let task = await Task.findById(req.params._id);
+		if (!task) throw new HttpError(404, 'Task not found', `_id: ${req.params._id}`);
 		res.status(200).send(task);
 	} catch (error) {
 		if (error.status !== 404) console.error(error);
@@ -36,9 +36,9 @@ export const createTask = async (req: Request, res: Response, next: NextFunction
 
 export const updateTask = async (req: Request, res: Response, next: NextFunction) => {
 	try {
-		const task = await Task.findByIdAndUpdate(req.params.objectId, req.body, { new: true });
+		const task = await Task.findByIdAndUpdate(req.params._id, req.body, { new: true });
 
-		if (!task) throw new HttpError(404, 'Task not found', `objectId: ${req.params.objectId}`);
+		if (!task) throw new HttpError(404, 'Task not found', `_id: ${req.params._id}`);
 
 		res.status(200).send(task);
 	} catch (error) {
@@ -49,8 +49,8 @@ export const updateTask = async (req: Request, res: Response, next: NextFunction
 
 export const deleteTask = async (req: Request, res: Response, next: NextFunction) => {
 	try {
-		let task = await Task.findByIdAndDelete(req.params.objectId);
-		if (!task) throw new HttpError(404, 'Task not found', `objectId: ${req.params.objectId}`);
+		let task = await Task.findByIdAndDelete(req.params._id);
+		if (!task) throw new HttpError(404, 'Task not found', `_id: ${req.params.objectId}`);
 		res.status(200).send(task);
 	} catch (error) {
 		if (error.status !== 404) console.error(error);

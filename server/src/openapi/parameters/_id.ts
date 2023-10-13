@@ -1,7 +1,7 @@
 import { OpenAPIV3 } from 'openapi-types';
 
-export const objectId: OpenAPIV3.ParameterObject = {
-	name: 'objectId',
+export const _id: OpenAPIV3.ParameterObject = {
+	name: '_id',
 	in: 'path',
 	description: 'Object ID',
 	schema: {

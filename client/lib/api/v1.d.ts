@@ -5,13 +5,11 @@
 
 
 export interface paths {
-  "/tasks": {
-    /** Get all tasks */
-    get: operations["getTasks"];
+  "/task": {
     /** Create a new task */
     post: operations["createTask"];
   };
-  "/tasks/{objectId}": {
+  "/task/{_id}": {
     /** Get a task */
     get: operations["getTask"];
     /** Update a task */
@@ -19,17 +17,16 @@ export interface paths {
     /** Delete a task */
     delete: operations["deleteTask"];
   };
+  "/tasks": {
+    /** Get all tasks */
+    get: operations["getTasks"];
+  };
 }
 
 export type webhooks = Record<string, never>;
 
 export interface components {
   schemas: {
-    /** @enum {string} */
-    success: "success";
-    /** @enum {string} */
-    fail: "fail";
-    generic: boolean | Record<string, never> | number | string;
     /** Task */
     task: {
       _id?: string;
@@ -56,7 +53,7 @@ export interface components {
   };
   parameters: {
     /** @description Object ID */
-    objectId: string;
+    _id: string;
   };
   requestBodies: never;
   headers: never;
@@ -69,18 +66,6 @@ export type external = Record<string, never>;
 
 export interface operations {
 
-  /** Get all tasks */
-  getTasks: {
-    responses: {
-      /** @description OK */
-      200: {
-        content: {
-          "application/json": components["schemas"]["task"][];
-        };
-      };
-      "4XX": components["responses"]["genericFail"];
-    };
-  };
   /** Create a new task */
   createTask: {
     requestBody?: {
@@ -106,7 +91,7 @@ export interface operations {
   getTask: {
     parameters: {
       path: {
-        objectId: components["parameters"]["objectId"];
+        _id: components["parameters"]["_id"];
       };
     };
     responses: {
@@ -123,7 +108,7 @@ export interface operations {
   updateTask: {
     parameters: {
       path: {
-        objectId: components["parameters"]["objectId"];
+        _id: components["parameters"]["_id"];
       };
     };
     requestBody?: {
@@ -149,7 +134,7 @@ export interface operations {
   deleteTask: {
     parameters: {
       path: {
-        objectId: components["parameters"]["objectId"];
+        _id: components["parameters"]["_id"];
       };
     };
     responses: {
@@ -159,6 +144,18 @@ export interface operations {
           "application/json": {
             task?: components["schemas"]["task"];
           };
+        };
+      };
+      "4XX": components["responses"]["genericFail"];
+    };
+  };
+  /** Get all tasks */
+  getTasks: {
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["task"][];
         };
       };
       "4XX": components["responses"]["genericFail"];
