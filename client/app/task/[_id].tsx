@@ -1,9 +1,9 @@
 import { router, Stack, useLocalSearchParams } from 'expo-router';
-import { View, StyleSheet } from 'react-native';
-import { Divider, IconButton, Switch, Text } from 'react-native-paper';
+import { View, StyleSheet, Alert } from 'react-native';
+import { Button, Divider, IconButton, MD3Colors, MD3DarkTheme, Switch, Text } from 'react-native-paper';
 import { useRefreshByUser } from 'hooks/useRefreshByUser';
 import { useRefreshOnFocus } from 'hooks/useRefreshOnFocus';
-import { getTask } from 'hooks/queries';
+import { getTask, deleteTask } from 'hooks/queries';
 
 export default function TaskScreen() {
 	const params = useLocalSearchParams<{
@@ -19,6 +19,30 @@ export default function TaskScreen() {
 	});
 	const { isRefetchingByUser, refetchByUser } = useRefreshByUser(refetch);
 	useRefreshOnFocus(refetch);
+
+	const deleteConfirmation = () => {
+		Alert.alert(
+			'Delete task?',
+			'Are you sure you want to delete this task?',
+			[
+				{
+					text: 'Yes',
+					onPress: () => {
+						deleteMutation.mutate();
+					},
+				},
+				{
+					text: 'No',
+					onPress: () => {},
+				},
+			],
+			{ cancelable: true }
+		);
+	};
+
+	const redirect = () => router.push({ pathname: '' });
+
+	const deleteMutation = deleteTask(data?._id || '', redirect);
 
 	return (
 		<View style={styles.container}>
@@ -47,6 +71,17 @@ export default function TaskScreen() {
 				<View style={styles.row}>
 					<Text variant="bodyLarge">{data?.description}</Text>
 				</View>
+				<Divider />
+				<View style={styles.row}>
+					<Button
+						mode="contained"
+						style={styles.deleteButton}
+						buttonColor={MD3Colors.error40}
+						onPress={deleteConfirmation}
+					>
+						Delete task
+					</Button>
+				</View>
 			</View>
 		</View>
 	);
@@ -61,5 +96,9 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 		justifyContent: 'space-between',
 		marginVertical: 10,
+	},
+	deleteButton: {
+		flex: 1,
+		colors: { primary: 'red' },
 	},
 });

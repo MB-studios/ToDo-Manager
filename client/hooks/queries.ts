@@ -3,7 +3,6 @@ import type { ParamsOption, RequestBodyOption } from 'openapi-fetch';
 import { paths, components } from 'lib/api/v1';
 import client from 'lib/api';
 import { UseFormGetValues } from 'react-hook-form';
-import Delay from 'dev-utils/delay';
 
 type UseQueryOptions<T> = ParamsOption<T> &
 	RequestBodyOption<T> & {
@@ -29,7 +28,6 @@ export function getTask(_id: string, initialData?: Partial<Task>, onSuccess?: Fu
 	return useQuery({
 		queryKey: [TASKS, { _id }],
 		queryFn: async ({ signal }) => {
-			await Delay(1000);
 			const { data, error } = await client.GET(`${TASKS}/{objectId}`, {
 				params: { path: { objectId: _id } },
 				signal,
@@ -61,6 +59,21 @@ export function upsertTask(getValues: UseFormGetValues<Task>, onSuccess: Functio
 				if (data) return data;
 				throw new Error(error.details);
 			}
+		},
+		onSuccess: () => {
+			onSuccess();
+		},
+	});
+}
+
+export function deleteTask(_id: string, onSuccess: Function) {
+	return useMutation({
+		mutationKey: [TASKS, { _id }],
+		mutationFn: async (): Promise<void> => {
+			const { error } = await client.DELETE(`${TASKS}/{objectId}`, {
+				params: { path: { objectId: _id } },
+			});
+			if (error) throw new Error(error.details);
 		},
 		onSuccess: () => {
 			onSuccess();

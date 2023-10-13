@@ -1,31 +1,22 @@
-import { router } from 'expo-router';
 import { View, StyleSheet } from 'react-native';
-import { useForm } from 'react-hook-form';
+import { Control, FormState, useForm } from 'react-hook-form';
 import { Button, Snackbar, Portal } from 'react-native-paper';
-import { upsertTask } from 'hooks/queries';
 import { components } from 'lib/api/v1';
 import { TextInputWithErrors } from 'components/TextInputWithErrors';
 
 export type Task = components['schemas']['task'];
 
-const TaskForm = ({ task, getValueSetter }: { task: Partial<Task>; getValueSetter?: Function }) => {
-	const { control, getValues, formState, handleSubmit, reset, setValue } = useForm<Task>({
-		defaultValues: task,
-		mode: 'all',
-	});
-
-	getValueSetter && getValueSetter(setValue);
-
-	const redirect = () => {
-		task._id ? router.back() : router.push('');
-	};
-
-	const mutation = upsertTask(getValues, redirect);
-
-	const onSubmit = () => {
-		mutation.mutate();
-	};
-
+const TaskForm = ({
+	control,
+	onSubmit,
+	formState,
+	reset,
+}: {
+	control: Control<any>;
+	onSubmit: Function;
+	formState: FormState<any>;
+	reset: Function;
+}) => {
 	return (
 		<View>
 			<View>
@@ -44,7 +35,7 @@ const TaskForm = ({ task, getValueSetter }: { task: Partial<Task>; getValueSette
 					multiline={true}
 					numberOfLines={5}
 				/>
-				<Button mode="contained" onPress={handleSubmit(onSubmit)}>
+				<Button mode="contained" onPress={() => onSubmit()}>
 					{' '}
 					Save
 				</Button>
@@ -52,7 +43,7 @@ const TaskForm = ({ task, getValueSetter }: { task: Partial<Task>; getValueSette
 			<Portal>
 				<Snackbar
 					visible={formState.isSubmitted && !formState.isValid}
-					onDismiss={() => reset({}, { keepValues: true })}
+					onDismiss={() => reset()}
 					action={{
 						label: 'close',
 					}}
