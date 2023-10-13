@@ -4,6 +4,7 @@ import { Button, Divider, IconButton, MD3Colors, MD3DarkTheme, Switch, Text } fr
 import { useRefreshByUser } from 'hooks/useRefreshByUser';
 import { useRefreshOnFocus } from 'hooks/useRefreshOnFocus';
 import { getTask, deleteTask } from 'hooks/queries';
+import FillStyleSheet from 'styles/fill';
 
 export default function TaskScreen() {
 	const params = useLocalSearchParams<{
@@ -46,7 +47,7 @@ export default function TaskScreen() {
 	const deleteMutation = deleteTask(data?._id || '', redirect);
 
 	return (
-		<View style={styles.container}>
+		<View style={FillStyleSheet.fillWithMargins}>
 			<Stack.Screen
 				options={{
 					title: data?.title,
@@ -58,22 +59,22 @@ export default function TaskScreen() {
 					),
 				}}
 			/>
-			<View>
-				<View style={styles.row}>
+			<View style={FillStyleSheet.fill}>
+				<View style={FillStyleSheet.fillHorizontalWithMargins}>
 					<Text variant="titleLarge">Task completed</Text>
 					<Switch value={data?.completed} onValueChange={() => console.log('Change completed status')} />
 				</View>
 				<Divider />
-				<View style={styles.row}>
+				<View style={FillStyleSheet.fillHorizontalWithMargins}>
 					<Text variant="titleLarge">Due date</Text>
 					<Text variant="bodyLarge">No due date</Text>
 				</View>
 				<Divider />
-				<View style={styles.row}>
+				<View style={FillStyleSheet.fill}>
 					<Text variant="bodyLarge">{data?.description}</Text>
 				</View>
 				<Divider />
-				<View style={styles.row}>
+				<View style={FillStyleSheet.fillHorizontalWithMargins}>
 					<Button
 						mode="contained"
 						style={styles.deleteButton}
@@ -89,17 +90,9 @@ export default function TaskScreen() {
 }
 
 const styles = StyleSheet.create({
-	container: {
-		margin: 10,
-	},
-	row: {
-		flexDirection: 'row',
-		alignItems: 'center',
-		justifyContent: 'space-between',
-		marginVertical: 10,
-	},
 	deleteButton: {
 		flex: 1,
+		flexDirection: 'row',
 		colors: { primary: 'red' },
 	},
 });

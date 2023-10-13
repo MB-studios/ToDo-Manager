@@ -1,10 +1,11 @@
 import { useEffect } from 'react';
 import { Stack, useNavigation } from 'expo-router';
 import { router } from 'expo-router';
-import { View, Alert } from 'react-native';
+import { View, Alert, StyleSheet } from 'react-native';
 import TaskForm from 'components/TaskForm';
 import { useForm } from 'react-hook-form';
 import { Task, upsertTask } from 'hooks/queries';
+import FillStyleSheet from 'styles/fill';
 
 export default function AddTask() {
 	const { control, getValues, formState, handleSubmit, reset, setValue } = useForm<Task>({
@@ -49,7 +50,7 @@ export default function AddTask() {
 		return unsubscribe;
 	}, [formState.isDirty, formState.isSubmitted, navigation]);
 	return (
-		<View>
+		<View style={FillStyleSheet.fillWithMargins}>
 			<Stack.Screen options={{ title: 'Add task' }} />
 			<TaskForm
 				control={control}

@@ -3,6 +3,7 @@ import { Control, FormState, useForm } from 'react-hook-form';
 import { Button, Snackbar, Portal } from 'react-native-paper';
 import { components } from 'lib/api/v1';
 import { TextInputWithErrors } from 'components/TextInputWithErrors';
+import FillStyleSheet from 'styles/fill';
 
 export type Task = components['schemas']['task'];
 
@@ -18,8 +19,8 @@ const TaskForm = ({
 	reset: Function;
 }) => {
 	return (
-		<View>
-			<View>
+		<View style={FillStyleSheet.fill}>
+			<View style={FillStyleSheet.fill}>
 				<TextInputWithErrors
 					control={control}
 					name="title"
@@ -28,13 +29,15 @@ const TaskForm = ({
 						required: 'Title is required',
 					}}
 				/>
-				<TextInputWithErrors
-					control={control}
-					name="description"
-					description="Description"
-					multiline={true}
-					numberOfLines={5}
-				/>
+				<View style={FillStyleSheet.fill}>
+					<TextInputWithErrors
+						control={control}
+						name="description"
+						description="Description"
+						multiline={true}
+						numberOfLines={5}
+					/>
+				</View>
 				<Button mode="contained" onPress={() => onSubmit()}>
 					{' '}
 					Save
