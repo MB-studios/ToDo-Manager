@@ -36,6 +36,8 @@ export interface components {
       description?: string;
       completed?: boolean;
       /** Format: date-time */
+      dueDate?: string;
+      /** Format: date-time */
       createdAt?: string;
       /** Format: date-time */
       updatedAt?: string;

@@ -11,6 +11,7 @@ import { deleteTask } from 'api/paths/task';
 import DeleteConfirmation from 'components/DeleteConfirmation';
 import React from 'react';
 import LoadingIndicator from 'components/LoadingIndicator';
+const { DateTime } = require('luxon');
 
 export default function TaskScreen() {
 	const { _id } = useLocalSearchParams<{
@@ -71,7 +72,9 @@ export default function TaskScreen() {
 						<Divider />
 						<View style={FillStyleSheet.fillHorizontalWithMargins}>
 							<Text variant="titleLarge">Due date</Text>
-							<Text variant="bodyLarge">No due date</Text>
+							<Text variant="bodyLarge">
+								{data?.dueDate ? DateTime.fromISO(data.dueDate).toISODate() : 'No due date'}
+							</Text>
 						</View>
 						<Divider />
 						<ScrollView style={FillStyleSheet.fillWithVerticalMargins}>
