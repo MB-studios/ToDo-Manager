@@ -10,6 +10,7 @@ import { Task } from 'api/types';
 import { deleteTask } from 'api/paths/task';
 import DeleteConfirmation from 'components/DeleteConfirmation';
 import React from 'react';
+import LoadingIndicator from 'components/LoadingIndicator';
 
 export default function TaskScreen() {
 	const { _id } = useLocalSearchParams<{
@@ -18,7 +19,7 @@ export default function TaskScreen() {
 
 	const queryKey = ['tasks', _id];
 	const [queryEnabled, setQueryEnabled] = React.useState(true);
-	const { data } = useQuery<Task, Error>({
+	const { data, isLoading, error } = useQuery<Task, Error>({
 		queryKey,
 		queryFn: () => getTask({ _id }),
 		enabled: queryEnabled,
@@ -44,7 +45,7 @@ export default function TaskScreen() {
 		<View style={FillStyleSheet.fillWithMargins}>
 			<Stack.Screen
 				options={{
-					title: data?.title,
+					title: data?.title || 'Task loading...',
 					animation: 'none',
 					headerRight: () => (
 						<IconButton
@@ -55,41 +56,44 @@ export default function TaskScreen() {
 				}}
 			/>
 			<View style={FillStyleSheet.fill}>
-				<View style={FillStyleSheet.fillHorizontalWithMargins}>
-					<Text variant="titleLarge">Task completed</Text>
-					<Switch value={data?.completed} onValueChange={() => console.log('Change completed status')} />
-				</View>
-				<Divider />
-				<View style={FillStyleSheet.fillHorizontalWithMargins}>
-					<Text variant="titleLarge">Due date</Text>
-					<Text variant="bodyLarge">No due date</Text>
-				</View>
-				<Divider />
-				<ScrollView style={FillStyleSheet.fillWithVerticalMargins}>
-					<Text variant="bodyLarge">{data?.description}</Text>
-				</ScrollView>
-				<View>
-					<Button
-						mode="contained"
-						buttonColor={MD3Colors.error40}
-						onPress={() =>
-							DeleteConfirmation('Delete task?', 'Are you sure you want to delete this task?', () =>
-								deleteTaskMutation.mutate(_id)
-							)
-						}
-					>
-						Delete task
-					</Button>
-				</View>
+				{isLoading ? (
+					<LoadingIndicator message="Loading tasks..." />
+				) : error ? (
+					<View style={FillStyleSheet.fill}>
+						<Text>Error loading task</Text>
+					</View>
+				) : (
+					<View style={FillStyleSheet.fill}>
+						<View style={FillStyleSheet.fillHorizontalWithMargins}>
+							<Text variant="titleLarge">Task completed</Text>
+							<Switch value={data?.completed} onValueChange={() => console.log('Change completed status')} />
+						</View>
+						<Divider />
+						<View style={FillStyleSheet.fillHorizontalWithMargins}>
+							<Text variant="titleLarge">Due date</Text>
+							<Text variant="bodyLarge">No due date</Text>
+						</View>
+						<Divider />
+						<ScrollView style={FillStyleSheet.fillWithVerticalMargins}>
+							<Text variant="bodyLarge">{data?.description}</Text>
+						</ScrollView>
+						<View>
+							<Button
+								mode="contained"
+								buttonColor={MD3Colors.error40}
+								textColor={MD3Colors.error90}
+								onPress={() =>
+									DeleteConfirmation('Delete task?', 'Are you sure you want to delete this task?', () =>
+										deleteTaskMutation.mutate(_id)
+									)
+								}
+							>
+								Delete task
+							</Button>
+						</View>
+					</View>
+				)}
 			</View>
 		</View>
 	);
 }
-
-const styles = StyleSheet.create({
-	deleteButton: {
-		flex: 1,
-		flexDirection: 'row',
-		colors: { primary: 'red' },
-	},
-});

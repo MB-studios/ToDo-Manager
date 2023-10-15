@@ -1,23 +1,35 @@
-import { View, StyleSheet } from 'react-native';
-import { Control, FormState, useForm } from 'react-hook-form';
+import { View } from 'react-native';
+import { useForm } from 'react-hook-form';
 import { Button, Snackbar, Portal } from 'react-native-paper';
-import { components } from 'api/v1';
 import { TextInputWithErrors } from 'components/TextInputWithErrors';
 import FillStyleSheet from 'styles/fill';
+import { Task } from 'api/types';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { upsertTask } from 'api/paths/task';
+import { router } from 'expo-router';
 
-export type Task = components['schemas']['task'];
+const TaskForm = ({ task, backToTask }: { task?: Task; backToTask?: boolean }) => {
+	const queryClient = useQueryClient();
+	const saveTaskMutation = useMutation({
+		mutationFn: (task: Task) => upsertTask(task),
+		onSuccess: (task: Task) => {
+			queryClient.invalidateQueries(['tasks']);
+			if (backToTask) {
+				router.back();
+			} else {
+				router.push('');
+			}
+		},
+	});
 
-const TaskForm = ({
-	control,
-	onSubmit,
-	formState,
-	reset,
-}: {
-	control: Control<any>;
-	onSubmit: Function;
-	formState: FormState<any>;
-	reset: Function;
-}) => {
+	const { control, formState, reset, handleSubmit } = useForm<Task>({
+		defaultValues: {
+			title: task?.title || '',
+			description: task?.description || '',
+		},
+		mode: 'all',
+	});
+
 	return (
 		<View style={FillStyleSheet.fill}>
 			<View style={FillStyleSheet.fill}>
@@ -38,7 +50,7 @@ const TaskForm = ({
 						numberOfLines={5}
 					/>
 				</View>
-				<Button mode="contained" onPress={() => onSubmit()}>
+				<Button mode="contained" onPress={handleSubmit((task) => saveTaskMutation.mutate(task))}>
 					{' '}
 					Save
 				</Button>

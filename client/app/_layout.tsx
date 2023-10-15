@@ -28,7 +28,9 @@ export default function Layout() {
 				<ThemeProvider value={colorScheme === 'light' ? DefaultTheme : DarkTheme}>
 					<Stack />
 					{
+						//
 						//<ReactQueryDevtools />
+						//
 					}
 				</ThemeProvider>
 			</PaperProvider>

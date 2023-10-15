@@ -1,19 +1,27 @@
-import { useReducer, useEffect } from 'react';
-import { router } from 'expo-router';
 import { Stack, useLocalSearchParams, useNavigation } from 'expo-router';
-import { View, Alert, StyleSheet } from 'react-native';
-import { Text } from 'react-native-paper';
-import { useForm } from 'react-hook-form';
-import { useRefreshByUser } from 'hooks/useRefreshByUser';
-import { useRefreshOnFocus } from 'hooks/useRefreshOnFocus';
-import { Task, getTask, upsertTask } from 'hooks/queries';
+import { View } from 'react-native';
 import TaskForm from 'components/TaskForm';
 import FillStyleSheet from 'styles/fill';
+import React from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { getTask } from 'api/paths/task';
+import { Task } from 'api/types';
 
 export default function EditTask() {
+	const { _id } = useLocalSearchParams<{
+		_id: string;
+	}>() as { _id: string };
+
+	const queryKey = ['tasks', _id];
+	const { data: task } = useQuery<Task, Error>({
+		queryKey,
+		queryFn: () => getTask({ _id }),
+	});
+
 	return (
-		<View>
-			<Text>Dummy for now</Text>
+		<View style={FillStyleSheet.fillWithMargins}>
+			<Stack.Screen options={{ title: 'Edit task', animation: 'none' }} />
+			<TaskForm task={task} backToTask={true} />
 		</View>
 	);
 	/*

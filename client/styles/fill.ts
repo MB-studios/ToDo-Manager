@@ -14,7 +14,7 @@ const FillStyleSheet = StyleSheet.create({
 		margin: 10,
 	},
 	fillWithVerticalMargins: {
-		fler: 1,
+		flex: 1,
 		marginVertical: 10,
 	},
 });
