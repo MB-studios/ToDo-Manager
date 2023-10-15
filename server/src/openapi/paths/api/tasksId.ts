@@ -65,12 +65,7 @@ export const taskId: OpenAPIV3.PathItemObject = {
 				content: {
 					'application/json': {
 						schema: {
-							type: 'object',
-							properties: {
-								task: {
-									$ref: '#/components/schemas/task',
-								},
-							},
+							$ref: '#/components/schemas/task',
 						},
 					},
 				},

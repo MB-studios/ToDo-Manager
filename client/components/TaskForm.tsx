@@ -1,7 +1,7 @@
 import { View, StyleSheet } from 'react-native';
 import { Control, FormState, useForm } from 'react-hook-form';
 import { Button, Snackbar, Portal } from 'react-native-paper';
-import { components } from 'lib/api/v1';
+import { components } from 'api/v1';
 import { TextInputWithErrors } from 'components/TextInputWithErrors';
 import FillStyleSheet from 'styles/fill';
 

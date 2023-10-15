@@ -5,6 +5,7 @@ import { useAppState } from 'hooks/useAppState';
 import { useOnlineManager } from 'hooks/useOnlineManager';
 import { Stack } from 'expo-router/stack';
 import { MD3DarkTheme, MD3LightTheme, PaperProvider } from 'react-native-paper';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
 function onAppStateChange(status: AppStateStatus) {
 	if (Platform.OS !== 'web') {
@@ -26,6 +27,9 @@ export default function Layout() {
 			<PaperProvider theme={colorScheme === 'light' ? MD3LightTheme : MD3DarkTheme}>
 				<ThemeProvider value={colorScheme === 'light' ? DefaultTheme : DarkTheme}>
 					<Stack />
+					{
+						//<ReactQueryDevtools />
+					}
 				</ThemeProvider>
 			</PaperProvider>
 		</QueryClientProvider>

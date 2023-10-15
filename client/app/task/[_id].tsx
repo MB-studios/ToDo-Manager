@@ -1,50 +1,44 @@
 import { router, Stack, useLocalSearchParams } from 'expo-router';
-import { View, StyleSheet, Alert } from 'react-native';
+import { View, StyleSheet, Alert, ScrollView } from 'react-native';
 import { Button, Divider, IconButton, MD3Colors, MD3DarkTheme, Switch, Text } from 'react-native-paper';
 import { useRefreshByUser } from 'hooks/useRefreshByUser';
 import { useRefreshOnFocus } from 'hooks/useRefreshOnFocus';
-import { getTask, deleteTask } from 'hooks/queries';
 import FillStyleSheet from 'styles/fill';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { getTask } from 'api/paths/task';
+import { Task } from 'api/types';
+import { deleteTask } from 'api/paths/task';
+import DeleteConfirmation from 'components/DeleteConfirmation';
+import React from 'react';
 
 export default function TaskScreen() {
-	const params = useLocalSearchParams<{
+	const { _id } = useLocalSearchParams<{
 		_id: string;
-		title: string;
-		description: string;
-		completed: string;
-	}>();
+	}>() as { _id: string };
 
-	const { isLoading, error, data, refetch } = getTask(params._id || '', {
-		...params,
-		completed: params.completed === 'true',
+	const queryKey = ['tasks', _id];
+	const [queryEnabled, setQueryEnabled] = React.useState(true);
+	const { data } = useQuery<Task, Error>({
+		queryKey,
+		queryFn: () => getTask({ _id }),
+		enabled: queryEnabled,
 	});
-	const { isRefetchingByUser, refetchByUser } = useRefreshByUser(refetch);
-	useRefreshOnFocus(refetch);
 
-	const deleteConfirmation = () => {
-		Alert.alert(
-			'Delete task?',
-			'Are you sure you want to delete this task?',
-			[
-				{
-					text: 'No',
-					style: 'cancel',
-					onPress: () => {},
-				},
-				{
-					text: 'Yes',
-					onPress: () => {
-						deleteMutation.mutate();
-					},
-				},
-			],
-			{ cancelable: true }
-		);
-	};
-
-	const redirect = () => router.push({ pathname: '' });
-
-	const deleteMutation = deleteTask(data?._id || '', redirect);
+	const queryClient = useQueryClient();
+	const deleteTaskMutation = useMutation({
+		mutationFn: (_id: string) => deleteTask(_id),
+		onMutate: () => {
+			setQueryEnabled(false);
+		},
+		onSuccess: async () => {
+			queryClient.removeQueries(queryKey);
+			await queryClient.refetchQueries({ queryKey: ['tasks'], exact: true });
+			router.push('');
+		},
+		onError: () => {
+			setQueryEnabled(true);
+		},
+	});
 
 	return (
 		<View style={FillStyleSheet.fillWithMargins}>
@@ -55,7 +49,7 @@ export default function TaskScreen() {
 					headerRight: () => (
 						<IconButton
 							icon="lead-pencil"
-							onPress={() => router.push({ pathname: `task/edit/${params._id}`, params: data })}
+							onPress={() => router.push({ pathname: `task/edit/${_id}`, params: data })}
 						/>
 					),
 				}}
@@ -71,16 +65,18 @@ export default function TaskScreen() {
 					<Text variant="bodyLarge">No due date</Text>
 				</View>
 				<Divider />
-				<View style={FillStyleSheet.fill}>
+				<ScrollView style={FillStyleSheet.fillWithVerticalMargins}>
 					<Text variant="bodyLarge">{data?.description}</Text>
-				</View>
-				<Divider />
-				<View style={FillStyleSheet.fillHorizontalWithMargins}>
+				</ScrollView>
+				<View>
 					<Button
 						mode="contained"
-						style={styles.deleteButton}
 						buttonColor={MD3Colors.error40}
-						onPress={deleteConfirmation}
+						onPress={() =>
+							DeleteConfirmation('Delete task?', 'Are you sure you want to delete this task?', () =>
+								deleteTaskMutation.mutate(_id)
+							)
+						}
 					>
 						Delete task
 					</Button>

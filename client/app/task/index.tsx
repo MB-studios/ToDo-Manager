@@ -2,12 +2,19 @@ import { useEffect } from 'react';
 import { Stack, useNavigation } from 'expo-router';
 import { router } from 'expo-router';
 import { View, Alert, StyleSheet } from 'react-native';
+import { Text } from 'react-native-paper';
 import TaskForm from 'components/TaskForm';
 import { useForm } from 'react-hook-form';
 import { Task, upsertTask } from 'hooks/queries';
 import FillStyleSheet from 'styles/fill';
 
 export default function AddTask() {
+	return (
+		<View>
+			<Text>Dummy for now</Text>
+		</View>
+	);
+	/*
 	const { control, getValues, formState, handleSubmit, reset, setValue } = useForm<Task>({
 		mode: 'all',
 	});
@@ -60,4 +67,5 @@ export default function AddTask() {
 			/>
 		</View>
 	);
+	*/
 }

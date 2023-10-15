@@ -1,7 +1,7 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
 import type { ParamsOption, RequestBodyOption } from 'openapi-fetch';
-import { paths, components } from 'lib/api/v1';
-import client from 'lib/api';
+import { paths, components } from 'api/v1';
+import client from 'api';
 import { UseFormGetValues } from 'react-hook-form';
 
 type UseQueryOptions<T> = ParamsOption<T> &

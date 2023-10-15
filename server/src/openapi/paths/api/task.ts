@@ -34,4 +34,31 @@ export const task: OpenAPIV3.PathItemObject = {
 			['4XX']: { $ref: '#/components/responses/genericFail' },
 		},
 	},
+	put: {
+		summary: 'Upsert task',
+		operationId: 'upsertTask',
+		tags: ['tasks'],
+		requestBody: {
+			content: {
+				'application/json': {
+					schema: {
+						$ref: '#/components/schemas/task',
+					},
+				},
+			},
+		},
+		responses: {
+			['200']: {
+				description: 'OK',
+				content: {
+					'application/json': {
+						schema: {
+							$ref: '#/components/schemas/task',
+						},
+					},
+				},
+			},
+			['4XX']: { $ref: '#/components/responses/genericFail' },
+		},
+	},
 };

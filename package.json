@@ -9,7 +9,7 @@
 		"client": "npm run start --prefix client",
 		"server": "npm run start --prefix server",
 		"start": "npm run start --prefix server",
-		"importApiDoc": "npx openapi-typescript server/exports/api-doc.json -o client/lib/api/v1.d.ts"
+		"importApiDoc": "npx openapi-typescript server/exports/api-doc.json -o client/api/v1.d.ts"
 	},
 	"directories": {
 		"doc": "docs"

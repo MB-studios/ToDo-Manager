@@ -2,6 +2,7 @@ import { useReducer, useEffect } from 'react';
 import { router } from 'expo-router';
 import { Stack, useLocalSearchParams, useNavigation } from 'expo-router';
 import { View, Alert, StyleSheet } from 'react-native';
+import { Text } from 'react-native-paper';
 import { useForm } from 'react-hook-form';
 import { useRefreshByUser } from 'hooks/useRefreshByUser';
 import { useRefreshOnFocus } from 'hooks/useRefreshOnFocus';
@@ -10,6 +11,12 @@ import TaskForm from 'components/TaskForm';
 import FillStyleSheet from 'styles/fill';
 
 export default function EditTask() {
+	return (
+		<View>
+			<Text>Dummy for now</Text>
+		</View>
+	);
+	/*
 	const params = useLocalSearchParams<{
 		_id: string;
 		title: string;
@@ -43,7 +50,7 @@ export default function EditTask() {
 	useRefreshOnFocus(refetch);
 	const { _id, title, description } = params;
 	*/
-
+	/*
 	const navigation = useNavigation();
 	useEffect(() => {
 		const unsubscribe = navigation.addListener('beforeRemove', (e) => {
@@ -83,4 +90,5 @@ export default function EditTask() {
 			/>
 		</View>
 	);
+	*/
 }

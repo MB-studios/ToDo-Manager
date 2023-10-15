@@ -4,6 +4,7 @@ import { ERROR_CODES } from '../constants/error-codes';
 export const errorMiddleware = (error: any, req: Request, res: Response, next: NextFunction) => {
 	let { errors, type, status, errorCode, message, details } = error;
 	if (errors || type === 'entity.parse.failed' || type === 'mquery.parse.failed') {
+		console.log(error);
 		return res.status(status || 400).json({
 			status: 'fail',
 			data: {

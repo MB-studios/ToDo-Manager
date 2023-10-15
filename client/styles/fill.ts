@@ -13,6 +13,10 @@ const FillStyleSheet = StyleSheet.create({
 		flex: 1,
 		margin: 10,
 	},
+	fillWithVerticalMargins: {
+		fler: 1,
+		marginVertical: 10,
+	},
 });
 
 export default FillStyleSheet;

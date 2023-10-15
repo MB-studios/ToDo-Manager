@@ -6,6 +6,8 @@
 
 export interface paths {
   "/task": {
+    /** Upsert task */
+    put: operations["upsertTask"];
     /** Create a new task */
     post: operations["createTask"];
   };
@@ -66,6 +68,23 @@ export type external = Record<string, never>;
 
 export interface operations {
 
+  /** Upsert task */
+  upsertTask: {
+    requestBody?: {
+      content: {
+        "application/json": components["schemas"]["task"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["task"];
+        };
+      };
+      "4XX": components["responses"]["genericFail"];
+    };
+  };
   /** Create a new task */
   createTask: {
     requestBody?: {
@@ -141,9 +160,7 @@ export interface operations {
       /** @description Deleted */
       200: {
         content: {
-          "application/json": {
-            task?: components["schemas"]["task"];
-          };
+          "application/json": components["schemas"]["task"];
         };
       };
       "4XX": components["responses"]["genericFail"];

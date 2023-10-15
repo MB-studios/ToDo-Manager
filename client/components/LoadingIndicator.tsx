@@ -1,5 +1,5 @@
-import { View, Text, StyleSheet } from 'react-native';
-import { ActivityIndicator } from 'react-native-paper';
+import { View, StyleSheet } from 'react-native';
+import { ActivityIndicator, Text } from 'react-native-paper';
 
 export default function LoadingIndicator({ message = 'Loading...' }) {
 	return (
