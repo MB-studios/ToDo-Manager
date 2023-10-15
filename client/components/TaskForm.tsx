@@ -11,7 +11,7 @@ import { DatePickerModal } from 'react-native-paper-dates';
 import { enGB, registerTranslation } from 'react-native-paper-dates';
 registerTranslation('en-GB', enGB);
 import React from 'react';
-const { DateTime } = require('luxon');
+import { DateTime } from 'luxon';
 
 type FormValues = {
 	_id?: string;
@@ -40,7 +40,7 @@ const TaskForm = ({ task, backToTask }: { task?: Task; backToTask?: boolean }) =
 			_id: task?._id || undefined,
 			title: task?.title || '',
 			description: task?.description || '',
-			dueDate: DateTime.fromISO(task?.dueDate).toISODate() || '',
+			dueDate: DateTime.fromISO(task?.dueDate || '').toISODate() || '',
 		},
 		mode: 'all',
 	});
@@ -126,7 +126,7 @@ const TaskForm = ({ task, backToTask }: { task?: Task; backToTask?: boolean }) =
 					date={dateForDatePicker()}
 					onConfirm={(params) => {
 						if (params.date !== undefined) {
-							setValue('dueDate', DateTime.fromJSDate(params.date).toISODate());
+							setValue('dueDate', DateTime.fromJSDate(params.date).toISODate() || '');
 						}
 						setDueDatePickerOpen(false);
 					}}
