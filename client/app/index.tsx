@@ -77,12 +77,18 @@ const data = [
 		title: 'No due date',
 		dueDate: undefined,
 	},
+	{
+		_id: 'f',
+		title: 'Completed',
+		dueDate: undefined,
+		completed: true,
+	},
 ];
 
 export default function Tasks() {
 	const [tasks, setTasks] = React.useState<Task[]>([]);
 	const [completed, setCompleted] = React.useState<Task[]>([]);
-	const { isLoading, error, refetch } = useQuery({
+	const { data, isLoading, error, refetch } = useQuery({
 		queryKey: ['tasks'],
 		queryFn: getTasks,
 		onSuccess: (data) => {
@@ -92,11 +98,11 @@ export default function Tasks() {
 	});
 	useRefreshOnFocus(refetch);
 
-	//let tasksTemp = formatSections(tasks);
+	let sections = formatSections(data);
 
 	const renderScene = BottomNavigation.SceneMap({
-		tasks: () => TaskList(tasks, isLoading, error, refetch),
-		completed: () => TaskList(completed, isLoading, error, refetch),
+		tasks: () => TaskList(sections.tasks, isLoading, error, refetch),
+		completed: () => TaskList(sections.completed, isLoading, error, refetch),
 	});
 
 	const [index, setIndex] = React.useState(0);

@@ -1,17 +1,25 @@
 import { DateTime } from 'luxon';
 import { Task } from 'api/types';
 
-export default function formatSections({ tasks }: { tasks: Partial<Task>[] }) {
-	interface sectionEntry {
+export type sectionEntry = {
+	title: string;
+	data: Task[];
+	order: number;
+};
+
+export default function formatSections(tasks: Task[] | undefined) {
+	if (!tasks) return { tasks: [], completed: [] };
+
+	interface sectionMapEntry {
 		order: number;
-		data: Partial<Task>[];
+		data: Task[];
 	}
 
 	interface sectionMap {
-		[sectionName: string]: sectionEntry;
+		[sectionName: string]: sectionMapEntry;
 	}
 
-	let sections: sectionMap = {
+	let tasksMap: sectionMap = {
 		Overdue: { order: 0, data: [] },
 		Today: { order: 1, data: [] },
 		'This Week': { order: 2, data: [] },
@@ -26,35 +34,61 @@ export default function formatSections({ tasks }: { tasks: Partial<Task>[] }) {
 		'No Due Date': { order: 4, data: [] },
 	};
 
-	const today = DateTime.fromISO('2023-10-14');
+	let completedMap: sectionMap = {
+		'Recently Completed': { order: 0, data: [] },
+	};
+
+	const today = DateTime.local();
 	tasks.forEach((task) => {
 		let dueDate = DateTime.fromISO(task.dueDate!);
-		if (!task.dueDate) {
-			sections['No Due Date'].data.push(task);
+		if (task.completed) {
+			completedMap['Recently Completed'].data.push(task);
+		} else if (!task.dueDate) {
+			tasksMap['No Due Date'].data.push(task);
 		} else if (dueDate.hasSame(today, 'day')) {
-			sections['Today'].data.push(task);
+			tasksMap['Today'].data.push(task);
 		} else if (dueDate < today) {
-			sections['Overdue'].data.push(task);
+			tasksMap['Overdue'].data.push(task);
 		} else if (dueDate.hasSame(today, 'week')) {
-			sections['This Week'].data.push(task);
+			tasksMap['This Week'].data.push(task);
 		} else if (dueDate <= today.endOf('week').plus({ week: 1 })) {
-			sections['Next Week'].data.push(task);
+			tasksMap['Next Week'].data.push(task);
 		} else if (dueDate.hasSame(today, 'month')) {
-			sections['This Month'].data.push(task);
+			tasksMap['This Month'].data.push(task);
 		} else if (dueDate <= today.endOf('month').plus({ month: 1 })) {
-			sections['Next Month'].data.push(task);
+			tasksMap['Next Month'].data.push(task);
 		} else if (dueDate.hasSame(today, 'year')) {
-			sections['This Year'].data.push(task);
+			tasksMap['This Year'].data.push(task);
 		} else if (dueDate <= today.endOf('year').plus({ year: 1 })) {
-			sections['Next Year'].data.push(task);
+			tasksMap['Next Year'].data.push(task);
 		} else if (dueDate <= today.plus({ year: 10 })) {
-			sections['Comming 10 years'].data.push(task);
+			tasksMap['Comming 10 years'].data.push(task);
 		} else if (dueDate <= today.plus({ year: 100 })) {
-			sections['Far ahead'].data.push(task);
+			tasksMap['Far ahead'].data.push(task);
 		} else {
-			sections["Somone else's problem"].data.push(task);
+			tasksMap["Somone else's problem"].data.push(task);
 		}
 	});
 
-	console.log(sections);
+	let sections = {
+		tasks: [] as sectionEntry[],
+		completed: [] as sectionEntry[],
+	};
+
+	for (const [key, value] of Object.entries(tasksMap)) {
+		if (value.data.length > 0) {
+			sections.tasks.push({ title: key, data: value.data, order: value.order });
+		}
+	}
+
+	for (const [key, value] of Object.entries(completedMap)) {
+		if (value.data.length > 0) {
+			sections.completed.push({ title: key, data: value.data, order: value.order });
+		}
+	}
+
+	sections.tasks.sort((a, b) => a.order - b.order);
+	sections.completed.sort((a, b) => a.order - b.order);
+
+	return sections;
 }

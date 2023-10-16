@@ -8,8 +8,14 @@ import { useRefreshOnFocus } from 'hooks/useRefreshOnFocus';
 import { QueryObserverResult, useMutation, useQueryClient } from '@tanstack/react-query';
 import { upsertTask } from 'api/paths/task';
 import FillStyleSheet from 'styles/fill';
+import { sectionEntry } from 'utils/formatSections';
 
-export default function TaskList(tasks: Task[], isLoading: boolean, error: any, refetch: () => Promise<unknown>) {
+export default function TaskList(
+	tasks: sectionEntry[],
+	isLoading: boolean,
+	error: any,
+	refetch: () => Promise<unknown>
+) {
 	const { isRefetchingByUser, refetchByUser } = useRefreshByUser(refetch);
 	useRefreshOnFocus(refetch);
 
@@ -40,7 +46,7 @@ export default function TaskList(tasks: Task[], isLoading: boolean, error: any, 
 		return (
 			<View style={FillStyleSheet.fillWithMargins}>
 				<SectionList
-					sections={sections}
+					sections={tasks}
 					refreshControl={<RefreshControl refreshing={isRefetchingByUser} onRefresh={refetchByUser} />}
 					ListFooterComponent={<View style={{ height: 80 }} />}
 					renderItem={({ item }) => (
