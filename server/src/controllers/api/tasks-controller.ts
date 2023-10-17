@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import HttpError from '../http-error';
-import { Task } from '../../models/task';
+import { Task, ITaskModel } from '../../models/task';
 import mongoose from 'mongoose';
 
 export const getTasks = async (req: Request, res: Response, next: NextFunction) => {
@@ -37,6 +37,30 @@ export const createTask = async (req: Request, res: Response, next: NextFunction
 
 export const updateTask = async (req: Request, res: Response, next: NextFunction) => {
 	try {
+		console.log(req.body);
+		const updatedTask = await Task.findById(req.body._id);
+		if (!updatedTask) throw new HttpError(404, 'Task not found', `_id: ${req.body._id}`);
+		updatedTask.title = req.body.title || updatedTask.title;
+		updatedTask.description = req.body.description || '';
+		updatedTask.dueDate = req.body.dueDate || undefined;
+		updatedTask.completed = req.body.completed || false;
+		updatedTask.completedAt = req.body.completedAt || undefined;
+		updatedTask.recurring = req.body.recurring || false;
+		updatedTask.recurringInterval = req.body.recurringInterval || undefined;
+		updatedTask.recurringUnit = req.body.recurringUnit || undefined;
+		updatedTask.fixedRecurrance = req.body.fixedRecurrance || false;
+		console.log(updatedTask);
+		await updatedTask.save();
+
+		res.status(200).send(updatedTask);
+	} catch (error) {
+		if (error.status !== 404) console.error(error);
+		next(error);
+	}
+};
+
+export const patchTask = async (req: Request, res: Response, next: NextFunction) => {
+	try {
 		const task = await Task.findByIdAndUpdate(req.params._id, req.body, { new: true });
 
 		if (!task) throw new HttpError(404, 'Task not found', `_id: ${req.params._id}`);
@@ -53,20 +77,6 @@ export const deleteTask = async (req: Request, res: Response, next: NextFunction
 		let task = await Task.findByIdAndDelete(req.params._id);
 		if (!task) throw new HttpError(404, 'Task not found', `_id: ${req.params.objectId}`);
 		res.status(200).send(task);
-	} catch (error) {
-		if (error.status !== 404) console.error(error);
-		next(error);
-	}
-};
-
-export const upsertTask = async (req: Request, res: Response, next: NextFunction) => {
-	try {
-		if (!req.body._id) req.body._id = new mongoose.Types.ObjectId();
-		const task = await Task.findByIdAndUpdate(req.body._id, req.body, {
-			new: true,
-			upsert: true,
-		});
-		res.status(201).send(task);
 	} catch (error) {
 		if (error.status !== 404) console.error(error);
 		next(error);

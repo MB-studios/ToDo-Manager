@@ -4,7 +4,7 @@ import TaskForm from 'components/TaskForm';
 import FillStyleSheet from 'styles/fill';
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { getTask } from 'api/paths/task';
+import { getTask, updateTask } from 'api/paths/task';
 import { Task } from 'api/types';
 
 export default function EditTask() {
@@ -21,7 +21,7 @@ export default function EditTask() {
 	return (
 		<View style={FillStyleSheet.fillWithMargins}>
 			<Stack.Screen options={{ title: 'Edit task', animation: 'none' }} />
-			<TaskForm task={task} backToTask={true} />
+			<TaskForm mutationFn={updateTask} task={task} backToTask={true} />
 		</View>
 	);
 	/*

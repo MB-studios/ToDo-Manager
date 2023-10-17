@@ -20,9 +20,9 @@ export const taskId: OpenAPIV3.PathItemObject = {
 			['4XX']: { $ref: '#/components/responses/genericFail' },
 		},
 	},
-	put: {
-		summary: 'Update a task',
-		operationId: 'updateTask',
+	patch: {
+		summary: 'Update part of a task',
+		operationId: 'patchTask',
 		tags: ['tasks'],
 		parameters: [{ $ref: '#/components/parameters/_id' }],
 		requestBody: {
@@ -34,6 +34,11 @@ export const taskId: OpenAPIV3.PathItemObject = {
 							title: { $ref: '#/components/schemas/task/properties/title' },
 							description: { $ref: '#/components/schemas/task/properties/description' },
 							completed: { $ref: '#/components/schemas/task/properties/completed' },
+							completedAt: { $ref: '#/components/schemas/task/properties/completedAt' },
+							recurring: { $ref: '#/components/schemas/task/properties/recurring' },
+							recurringInterval: { $ref: '#/components/schemas/task/properties/recurringInterval' },
+							recurringUnit: { $ref: '#/components/schemas/task/properties/recurringUnit' },
+							fixedRecurrance: { $ref: '#/components/schemas/task/properties/fixedRecurrance' },
 						},
 						minProperties: 1,
 					},

@@ -15,6 +15,11 @@ export const task: OpenAPIV3.PathItemObject = {
 							title: { $ref: '#/components/schemas/task/properties/title' },
 							description: { $ref: '#/components/schemas/task/properties/description' },
 							completed: { $ref: '#/components/schemas/task/properties/completed' },
+							completedAt: { $ref: '#/components/schemas/task/properties/completedAt' },
+							recurring: { $ref: '#/components/schemas/task/properties/recurring' },
+							recurringInterval: { $ref: '#/components/schemas/task/properties/recurringInterval' },
+							recurringUnit: { $ref: '#/components/schemas/task/properties/recurringUnit' },
+							fixedRecurrance: { $ref: '#/components/schemas/task/properties/fixedRecurrance' },
 						},
 					},
 				},
@@ -35,8 +40,8 @@ export const task: OpenAPIV3.PathItemObject = {
 		},
 	},
 	put: {
-		summary: 'Upsert task',
-		operationId: 'upsertTask',
+		summary: 'Update task',
+		operationId: 'updateTask',
 		tags: ['tasks'],
 		requestBody: {
 			content: {

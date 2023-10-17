@@ -4,15 +4,22 @@ import m2s from 'mongoose-to-swagger';
 export interface ITask {
 	title: string;
 	description: string;
+	dueDate: Date;
 	completed: boolean;
+	completedAt: Date;
+	recurring: boolean;
+	recurringInterval: number;
+	recurringUnit: string;
+	fixedRecurrance: boolean;
 }
 
-export interface ITaskModel extends ITask, Document {}
+export interface ITaskModel extends ITask {}
 
 const TaskSchema: Schema = new Schema(
 	{
 		_id: {
 			type: mongoose.Types.ObjectId,
+			required: true,
 			default: () => {
 				return new mongoose.Types.ObjectId();
 			},
@@ -20,23 +27,44 @@ const TaskSchema: Schema = new Schema(
 		title: {
 			type: String,
 			required: true,
+			default: '',
 		},
 		description: {
 			type: String,
 			default: '',
 		},
+		dueDate: {
+			type: Date,
+			default: null,
+		},
 		completed: {
 			type: Boolean,
 			default: false,
 		},
-		dueDate: {
+		completedAt: {
 			type: Date,
 			default: undefined,
+		},
+		recurring: {
+			type: Boolean,
+			default: false,
+		},
+		recurringInterval: {
+			type: Number,
+			default: undefined,
+		},
+		recurringUnit: {
+			type: String,
+			default: undefined,
+		},
+		fixedRecurrance: {
+			type: Boolean,
+			default: false,
 		},
 	},
 	{
 		versionKey: false,
-		timestamps: true,
+		timestamps: false,
 	}
 );
 

@@ -1,15 +1,17 @@
 import { View } from 'react-native';
-import { get, useForm } from 'react-hook-form';
-import { Button, Snackbar, Portal, TextInput } from 'react-native-paper';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Button, Snackbar, Portal, Text, Switch, Divider } from 'react-native-paper';
 import { TextInputWithErrors } from 'components/TextInputWithErrors';
 import FillStyleSheet from 'styles/fill';
 import { Task } from 'api/types';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { upsertTask } from 'api/paths/task';
 import { router } from 'expo-router';
 import { DatePickerModal } from 'react-native-paper-dates';
 import { enGB, registerTranslation } from 'react-native-paper-dates';
 registerTranslation('en-GB', enGB);
+import DropDown from 'react-native-paper-dropdown';
 import React from 'react';
 import { DateTime } from 'luxon';
 
@@ -18,16 +20,45 @@ type FormValues = {
 	title: string;
 	description: string;
 	dueDate: string;
+	recurring: boolean;
+	recurringInterval: string;
+	recurringUnit: string;
+	fixedRecurrance: boolean;
 };
 
-const TaskForm = ({ task, backToTask }: { task?: Task; backToTask?: boolean }) => {
+const FormData = z
+	.object({
+		_id: z.string().optional(),
+		title: z.string().min(1, 'Title is required'),
+		description: z.string().optional(),
+		dueDate: z
+			.string()
+			.regex(/^[0-9]{4}-[0-9]{2}-[0-9]{2}$|^$/, 'Date must be in format YYYY-MM-DD')
+			.optional(),
+		recurring: z.boolean(),
+		recurringInterval: z.string().optional(),
+		recurringUnit: z.string().optional(),
+		fixedRecurrance: z.boolean(),
+	})
+	.superRefine((values, ctx) => {
+		if (values.recurring && !values.dueDate) {
+			ctx.addIssue({
+				code: z.ZodIssueCode.custom,
+				message: 'Due date is required for recurring tasks',
+				path: ['dueDate'],
+			});
+		}
+	});
+
+type FormData = z.infer<typeof FormData>;
+
+const TaskForm = ({ mutationFn, task, backToTask }: { mutationFn: Function; task?: Task; backToTask?: boolean }) => {
 	const queryClient = useQueryClient();
 	const saveTaskMutation = useMutation({
-		mutationFn: (task: Task) => upsertTask(task),
-		onSuccess: (task: Task) => {
+		mutationFn: (task: Partial<Task>) => mutationFn(task),
+		onSuccess: () => {
 			queryClient.invalidateQueries(['tasks']);
 			if (backToTask) {
-				console.log('back to task');
 				router.back();
 			} else {
 				router.push('');
@@ -35,18 +66,22 @@ const TaskForm = ({ task, backToTask }: { task?: Task; backToTask?: boolean }) =
 		},
 	});
 
-	const { control, register, formState, reset, handleSubmit, getValues, setValue } = useForm<FormValues>({
+	const { control, trigger, formState, reset, handleSubmit, setValue, watch } = useForm<FormValues>({
 		defaultValues: {
 			_id: task?._id || undefined,
 			title: task?.title || '',
 			description: task?.description || '',
 			dueDate: DateTime.fromISO(task?.dueDate || '').toISODate() || '',
+			recurring: task?.recurring || false,
+			recurringInterval: task?.recurringInterval?.toString() || '',
+			recurringUnit: task?.recurringUnit || '',
+			fixedRecurrance: task?.fixedRecurrance || false,
 		},
+		resolver: zodResolver(FormData),
 		mode: 'all',
 	});
 	const [dueDatePickerOpen, setDueDatePickerOpen] = React.useState(false);
-
-	console.log(getValues());
+	const [showRecurringUnitDropDown, setShowRecurringUnitDropDown] = React.useState(false);
 
 	const dateForDatePicker = () => {
 		if (task?.dueDate) {
@@ -56,45 +91,82 @@ const TaskForm = ({ task, backToTask }: { task?: Task; backToTask?: boolean }) =
 		}
 	};
 
-	let dueDateRegister = register('dueDate', {
-		pattern: {
-			value: /^[0-9]{4}-[0-9]{2}-[0-9]{2}$|^$/,
-			message: 'Date must be in format YYYY-MM-DD',
-		},
-	});
+	const recurringUnitsList = [
+		{ label: 'Days', value: 'days' },
+		{ label: 'Weeks', value: 'weeks' },
+		{ label: 'Months', value: 'months' },
+		{ label: 'Years', value: 'years' },
+	];
 
 	return (
 		<View style={FillStyleSheet.fill}>
 			<View style={FillStyleSheet.fill}>
-				<TextInputWithErrors
-					control={control}
-					name="title"
-					description="Title"
-					rules={{
-						required: 'Title is required',
-					}}
-				/>
+				<TextInputWithErrors control={control} trigger={trigger} name="title" description="Title" />
 				<View style={{ flexDirection: 'row', alignItems: 'center' }}>
 					<View style={{ flex: 1 }}>
-						<TextInputWithErrors
-							control={control}
-							name="dueDate"
-							description="Due date"
-							rules={{
-								pattern: {
-									value: /^[0-9]{4}-[0-9]{2}-[0-9]{2}$|^$/,
-									message: 'Date must be in format YYYY-MM-DD',
-								},
-							}}
-						/>
+						<TextInputWithErrors control={control} trigger={trigger} rules={{}} name="dueDate" description="Due date" />
 					</View>
 					<Button icon="calendar" onPress={() => setDueDatePickerOpen(true)} mode="text">
 						Select
 					</Button>
 				</View>
+				<Divider />
+				<View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 10 }}>
+					<Text style={{ flex: 1 }} variant="titleLarge">
+						Recurring
+					</Text>
+					<Switch
+						value={watch('recurring')}
+						onValueChange={() => {
+							setValue('recurring', !watch('recurring'));
+							trigger('dueDate');
+						}}
+					/>
+				</View>
+				{watch('recurring') && (
+					<View>
+						<View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
+							<Text style={{ flex: 1 }} variant="titleLarge">
+								Repeat every
+							</Text>
+							<TextInputWithErrors
+								control={control}
+								trigger={trigger}
+								name="recurringInterval"
+								description="Interval"
+								keyboardType="numeric"
+							/>
+							<DropDown
+								label="Unit"
+								mode="outlined"
+								visible={showRecurringUnitDropDown}
+								showDropDown={() => setShowRecurringUnitDropDown(true)}
+								onDismiss={() => setShowRecurringUnitDropDown(false)}
+								value={watch('recurringUnit')}
+								setValue={(value) => {
+									setValue('recurringUnit', value);
+								}}
+								list={recurringUnitsList}
+							/>
+						</View>
+						<View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
+							<Text style={{ flex: 1 }} variant="titleLarge">
+								Fixed recurrance
+							</Text>
+							<Switch
+								value={watch('fixedRecurrance')}
+								onValueChange={() => {
+									setValue('fixedRecurrance', !watch('fixedRecurrance'));
+								}}
+							/>
+						</View>
+					</View>
+				)}
+				<Divider />
 				<View style={FillStyleSheet.fill}>
 					<TextInputWithErrors
 						control={control}
+						trigger={trigger}
 						name="description"
 						description="Description"
 						multiline={true}
@@ -106,9 +178,16 @@ const TaskForm = ({ task, backToTask }: { task?: Task; backToTask?: boolean }) =
 					onPress={handleSubmit((task) => {
 						let dueDate =
 							task.dueDate === '' ? undefined : DateTime.fromISO(task.dueDate).toFormat("yyyy-MM-dd'T00:00:00.000Z'");
+						let recurringInterval = task.recurringInterval === '' ? undefined : parseInt(task.recurringInterval);
+						console.log({
+							...task,
+							dueDate,
+							recurringInterval,
+						});
 						saveTaskMutation.mutate({
 							...task,
 							dueDate,
+							recurringInterval,
 						});
 					})}
 				>
@@ -129,6 +208,7 @@ const TaskForm = ({ task, backToTask }: { task?: Task; backToTask?: boolean }) =
 							setValue('dueDate', DateTime.fromJSDate(params.date).toISODate() || '');
 						}
 						setDueDatePickerOpen(false);
+						trigger('dueDate');
 					}}
 				/>
 				<Snackbar

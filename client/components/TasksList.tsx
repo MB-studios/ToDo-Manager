@@ -6,7 +6,7 @@ import { router } from 'expo-router';
 import { useRefreshByUser } from 'hooks/useRefreshByUser';
 import { useRefreshOnFocus } from 'hooks/useRefreshOnFocus';
 import { QueryObserverResult, useMutation, useQueryClient } from '@tanstack/react-query';
-import { upsertTask } from 'api/paths/task';
+import { patchTask } from 'api/paths/task';
 import FillStyleSheet from 'styles/fill';
 import { sectionEntry } from 'utils/formatSections';
 
@@ -25,7 +25,7 @@ export default function TaskList(
 
 	const queryClient = useQueryClient();
 	const updateCompletedMutation = useMutation({
-		mutationFn: (task: Task) => upsertTask({ ...task, completed: !task.completed }),
+		mutationFn: (task: Task) => patchTask({ _id: task._id, task: { ...task, completed: !task.completed } }),
 		onSuccess: () => {
 			queryClient.invalidateQueries(['tasks']);
 		},
