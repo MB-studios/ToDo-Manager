@@ -33,7 +33,6 @@ export const taskId: OpenAPIV3.PathItemObject = {
 						properties: {
 							title: { $ref: '#/components/schemas/task/properties/title' },
 							description: { $ref: '#/components/schemas/task/properties/description' },
-							completed: { $ref: '#/components/schemas/task/properties/completed' },
 							completedAt: { $ref: '#/components/schemas/task/properties/completedAt' },
 							recurring: { $ref: '#/components/schemas/task/properties/recurring' },
 							recurringInterval: { $ref: '#/components/schemas/task/properties/recurringInterval' },

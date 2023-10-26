@@ -176,18 +176,27 @@ const TaskForm = ({ mutationFn, task, backToTask }: { mutationFn: Function; task
 				<Button
 					mode="contained"
 					onPress={handleSubmit((task) => {
-						let dueDate =
-							task.dueDate === '' ? undefined : DateTime.fromISO(task.dueDate).toFormat("yyyy-MM-dd'T00:00:00.000Z'");
+						let dueDate = task.dueDate === '' ? undefined : DateTime.fromISO(task.dueDate);
+						let dueDateString = dueDate?.toFormat("yyyy-MM-dd'T00:00:00.000Z'");
 						let recurringInterval = task.recurringInterval === '' ? undefined : parseInt(task.recurringInterval);
-						console.log({
-							...task,
-							dueDate,
-							recurringInterval,
-						});
+						let currentDueDate: string | undefined;
+						if (task.recurring && dueDate) {
+							let today = DateTime.now().startOf('day');
+							if (dueDate >= today) {
+								currentDueDate = dueDateString;
+							} else {
+								let diff = Math.ceil(today.diff(dueDate, task.recurringUnit as any).as(task.recurringUnit as any));
+								currentDueDate = dueDate.plus({ [task.recurringUnit]: diff }).toFormat("yyyy-MM-dd'T00:00:00.000Z'");
+							}
+						} else {
+							currentDueDate = dueDateString;
+						}
 						saveTaskMutation.mutate({
 							...task,
-							dueDate,
+							dueDate: dueDateString,
 							recurringInterval,
+							currentDueDate,
+							commingDueDate: currentDueDate,
 						});
 					})}
 				>

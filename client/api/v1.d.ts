@@ -3,66 +3,70 @@
  * Do not make direct changes to the file.
  */
 
+
 export interface paths {
-	'/task': {
-		/** Update task */
-		put: operations['updateTask'];
-		/** Create a new task */
-		post: operations['createTask'];
-	};
-	'/task/{_id}': {
-		/** Get a task */
-		get: operations['getTask'];
-		/** Delete a task */
-		delete: operations['deleteTask'];
-		/** Update part of a task */
-		patch: operations['patchTask'];
-	};
-	'/tasks': {
-		/** Get all tasks */
-		get: operations['getTasks'];
-	};
+  "/task": {
+    /** Update task */
+    put: operations["updateTask"];
+    /** Create a new task */
+    post: operations["createTask"];
+  };
+  "/task/{_id}": {
+    /** Get a task */
+    get: operations["getTask"];
+    /** Delete a task */
+    delete: operations["deleteTask"];
+    /** Update part of a task */
+    patch: operations["patchTask"];
+  };
+  "/tasks": {
+    /** Get all tasks */
+    get: operations["getTasks"];
+  };
 }
 
 export type webhooks = Record<string, never>;
 
 export interface components {
-	schemas: {
-		/** Task */
-		task: {
-			_id: string;
-			title: string;
-			description?: string;
-			/** Format: date-time */
-			dueDate?: string | null;
-			completed?: boolean;
-			/** Format: date-time */
-			completedAt?: string;
-			recurring?: boolean;
-			recurringInterval?: number;
-			recurringUnit?: string;
-			fixedRecurrance?: boolean;
-		};
-	};
-	responses: {
-		/** @description 4XX Fail */
-		genericFail: {
-			content: {
-				'application/json': {
-					errorCore?: string;
-					message?: string;
-					details?: string;
-				};
-			};
-		};
-	};
-	parameters: {
-		/** @description Object ID */
-		_id: string;
-	};
-	requestBodies: never;
-	headers: never;
-	pathItems: never;
+  schemas: {
+    /** Task */
+    task: {
+      _id: string;
+      title: string;
+      description?: string;
+      /** Format: date-time */
+      dueDate?: string;
+      /** Format: date-time */
+      currentDueDate?: string;
+      /** Format: date-time */
+      commingDueDate?: string;
+      /** Format: date-time */
+      completedAt?: string;
+      recurring?: boolean;
+      recurringInterval?: number;
+      recurringUnit?: string;
+      fixedRecurrance?: boolean;
+    };
+  };
+  responses: {
+    /** @description 4XX Fail */
+    genericFail: {
+      content: {
+        "application/json": {
+          errorCore?: string;
+          message?: string;
+          details?: string;
+        };
+      };
+    };
+  };
+  parameters: {
+    /** @description Object ID */
+    _id: string;
+  };
+  requestBodies: never;
+  headers: never;
+  pathItems: never;
 }
 
 export type $defs = Record<string, never>;
@@ -70,124 +74,123 @@ export type $defs = Record<string, never>;
 export type external = Record<string, never>;
 
 export interface operations {
-	/** Update task */
-	updateTask: {
-		requestBody?: {
-			content: {
-				'application/json': components['schemas']['task'];
-			};
-		};
-		responses: {
-			/** @description OK */
-			200: {
-				content: {
-					'application/json': components['schemas']['task'];
-				};
-			};
-			'4XX': components['responses']['genericFail'];
-		};
-	};
-	/** Create a new task */
-	createTask: {
-		requestBody?: {
-			content: {
-				'application/json': {
-					title: components['schemas']['task']['title'];
-					description?: components['schemas']['task']['description'];
-					completed?: components['schemas']['task']['completed'];
-					completedAt?: components['schemas']['task']['completedAt'];
-					recurring?: components['schemas']['task']['recurring'];
-					recurringInterval?: components['schemas']['task']['recurringInterval'];
-					recurringUnit?: components['schemas']['task']['recurringUnit'];
-					fixedRecurrance?: components['schemas']['task']['fixedRecurrance'];
-				};
-			};
-		};
-		responses: {
-			/** @description Created */
-			201: {
-				content: {
-					'application/json': components['schemas']['task'];
-				};
-			};
-			'4XX': components['responses']['genericFail'];
-		};
-	};
-	/** Get a task */
-	getTask: {
-		parameters: {
-			path: {
-				_id: components['parameters']['_id'];
-			};
-		};
-		responses: {
-			/** @description OK */
-			200: {
-				content: {
-					'application/json': components['schemas']['task'];
-				};
-			};
-			'4XX': components['responses']['genericFail'];
-		};
-	};
-	/** Delete a task */
-	deleteTask: {
-		parameters: {
-			path: {
-				_id: components['parameters']['_id'];
-			};
-		};
-		responses: {
-			/** @description Deleted */
-			200: {
-				content: {
-					'application/json': components['schemas']['task'];
-				};
-			};
-			'4XX': components['responses']['genericFail'];
-		};
-	};
-	/** Update part of a task */
-	patchTask: {
-		parameters: {
-			path: {
-				_id: components['parameters']['_id'];
-			};
-		};
-		requestBody?: {
-			content: {
-				'application/json': {
-					title?: components['schemas']['task']['title'];
-					description?: components['schemas']['task']['description'];
-					completed?: components['schemas']['task']['completed'];
-					completedAt?: components['schemas']['task']['completedAt'];
-					recurring?: components['schemas']['task']['recurring'];
-					recurringInterval?: components['schemas']['task']['recurringInterval'];
-					recurringUnit?: components['schemas']['task']['recurringUnit'];
-					fixedRecurrance?: components['schemas']['task']['fixedRecurrance'];
-				};
-			};
-		};
-		responses: {
-			/** @description Updated */
-			200: {
-				content: {
-					'application/json': components['schemas']['task'];
-				};
-			};
-			'4XX': components['responses']['genericFail'];
-		};
-	};
-	/** Get all tasks */
-	getTasks: {
-		responses: {
-			/** @description OK */
-			200: {
-				content: {
-					'application/json': components['schemas']['task'][];
-				};
-			};
-			'4XX': components['responses']['genericFail'];
-		};
-	};
+
+  /** Update task */
+  updateTask: {
+    requestBody?: {
+      content: {
+        "application/json": components["schemas"]["task"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["task"];
+        };
+      };
+      "4XX": components["responses"]["genericFail"];
+    };
+  };
+  /** Create a new task */
+  createTask: {
+    requestBody?: {
+      content: {
+        "application/json": {
+          title: components["schemas"]["task"]["title"];
+          description?: components["schemas"]["task"]["description"];
+          completedAt?: components["schemas"]["task"]["completedAt"];
+          recurring?: components["schemas"]["task"]["recurring"];
+          recurringInterval?: components["schemas"]["task"]["recurringInterval"];
+          recurringUnit?: components["schemas"]["task"]["recurringUnit"];
+          fixedRecurrance?: components["schemas"]["task"]["fixedRecurrance"];
+        };
+      };
+    };
+    responses: {
+      /** @description Created */
+      201: {
+        content: {
+          "application/json": components["schemas"]["task"];
+        };
+      };
+      "4XX": components["responses"]["genericFail"];
+    };
+  };
+  /** Get a task */
+  getTask: {
+    parameters: {
+      path: {
+        _id: components["parameters"]["_id"];
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["task"];
+        };
+      };
+      "4XX": components["responses"]["genericFail"];
+    };
+  };
+  /** Delete a task */
+  deleteTask: {
+    parameters: {
+      path: {
+        _id: components["parameters"]["_id"];
+      };
+    };
+    responses: {
+      /** @description Deleted */
+      200: {
+        content: {
+          "application/json": components["schemas"]["task"];
+        };
+      };
+      "4XX": components["responses"]["genericFail"];
+    };
+  };
+  /** Update part of a task */
+  patchTask: {
+    parameters: {
+      path: {
+        _id: components["parameters"]["_id"];
+      };
+    };
+    requestBody?: {
+      content: {
+        "application/json": {
+          title?: components["schemas"]["task"]["title"];
+          description?: components["schemas"]["task"]["description"];
+          completedAt?: components["schemas"]["task"]["completedAt"];
+          recurring?: components["schemas"]["task"]["recurring"];
+          recurringInterval?: components["schemas"]["task"]["recurringInterval"];
+          recurringUnit?: components["schemas"]["task"]["recurringUnit"];
+          fixedRecurrance?: components["schemas"]["task"]["fixedRecurrance"];
+        };
+      };
+    };
+    responses: {
+      /** @description Updated */
+      200: {
+        content: {
+          "application/json": components["schemas"]["task"];
+        };
+      };
+      "4XX": components["responses"]["genericFail"];
+    };
+  };
+  /** Get all tasks */
+  getTasks: {
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": components["schemas"]["task"][];
+        };
+      };
+      "4XX": components["responses"]["genericFail"];
+    };
+  };
 }

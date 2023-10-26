@@ -38,32 +38,34 @@ export default function formatSections(tasks: Task[] | undefined) {
 		'Recently Completed': { order: 0, data: [] },
 	};
 
-	const today = DateTime.local();
+	const today = DateTime.now().startOf('day');
 	tasks.forEach((task) => {
-		let dueDate = DateTime.fromISO(task.dueDate!);
-		if (task.completed) {
+		console.log(task);
+		let commingDueDate = DateTime.fromISO(task.commingDueDate!);
+		if (task.completedAt) {
 			completedMap['Recently Completed'].data.push(task);
-		} else if (!task.dueDate) {
+		}
+		if (!task.dueDate && !task.completedAt) {
 			tasksMap['No Due Date'].data.push(task);
-		} else if (dueDate.hasSame(today, 'day')) {
+		} else if (commingDueDate.hasSame(today, 'day')) {
 			tasksMap['Today'].data.push(task);
-		} else if (dueDate < today) {
+		} else if (commingDueDate < today) {
 			tasksMap['Overdue'].data.push(task);
-		} else if (dueDate.hasSame(today, 'week')) {
+		} else if (commingDueDate.hasSame(today, 'week')) {
 			tasksMap['This Week'].data.push(task);
-		} else if (dueDate <= today.endOf('week').plus({ week: 1 })) {
+		} else if (commingDueDate <= today.endOf('week').plus({ week: 1 })) {
 			tasksMap['Next Week'].data.push(task);
-		} else if (dueDate.hasSame(today, 'month')) {
+		} else if (commingDueDate.hasSame(today, 'month')) {
 			tasksMap['This Month'].data.push(task);
-		} else if (dueDate <= today.endOf('month').plus({ month: 1 })) {
+		} else if (commingDueDate <= today.endOf('month').plus({ month: 1 })) {
 			tasksMap['Next Month'].data.push(task);
-		} else if (dueDate.hasSame(today, 'year')) {
+		} else if (commingDueDate.hasSame(today, 'year')) {
 			tasksMap['This Year'].data.push(task);
-		} else if (dueDate <= today.endOf('year').plus({ year: 1 })) {
+		} else if (commingDueDate <= today.endOf('year').plus({ year: 1 })) {
 			tasksMap['Next Year'].data.push(task);
-		} else if (dueDate <= today.plus({ year: 10 })) {
+		} else if (commingDueDate <= today.plus({ year: 10 })) {
 			tasksMap['Comming 10 years'].data.push(task);
-		} else if (dueDate <= today.plus({ year: 100 })) {
+		} else if (commingDueDate <= today.plus({ year: 100 })) {
 			tasksMap['Far ahead'].data.push(task);
 		} else {
 			tasksMap["Somone else's problem"].data.push(task);

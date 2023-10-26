@@ -5,30 +5,23 @@ import { BottomNavigation, IconButton } from 'react-native-paper';
 import { useQuery } from '@tanstack/react-query';
 import { useRefreshOnFocus } from 'hooks/useRefreshOnFocus';
 import { getTasks } from 'api/paths/tasks';
-import { Task } from 'api/types';
 import fill from 'styles/fill';
 import TaskList from 'components/TasksList';
 import { AddButton } from 'components/AddButton';
 import formatSections from 'utils/formatSections';
 
 export default function Tasks() {
-	const [tasks, setTasks] = React.useState<Task[]>([]);
-	const [completed, setCompleted] = React.useState<Task[]>([]);
 	const { data, isLoading, error, refetch } = useQuery({
 		queryKey: ['tasks'],
 		queryFn: getTasks,
-		onSuccess: (data) => {
-			setTasks(data.filter((task) => !task.completed));
-			setCompleted(data.filter((task) => task.completed));
-		},
 	});
 	useRefreshOnFocus(refetch);
 
 	let sections = formatSections(data);
 
 	const renderScene = BottomNavigation.SceneMap({
-		tasks: () => TaskList(sections.tasks, isLoading, error, refetch),
-		completed: () => TaskList(sections.completed, isLoading, error, refetch),
+		tasks: () => TaskList(sections.tasks, isLoading, error, refetch, false),
+		completed: () => TaskList(sections.completed, isLoading, error, refetch, true),
 	});
 
 	const [index, setIndex] = React.useState(0);

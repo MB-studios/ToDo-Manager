@@ -67,7 +67,10 @@ export default function TaskScreen() {
 					<View style={FillStyleSheet.fill}>
 						<View style={FillStyleSheet.fillHorizontalWithMargins}>
 							<Text variant="titleLarge">Task completed</Text>
-							<Switch value={data?.completed} onValueChange={() => console.log('Change completed status')} />
+							<Switch
+								value={data?.completedAt !== undefined}
+								onValueChange={() => console.log('Change completed status')}
+							/>
 						</View>
 						<Divider />
 						<View style={FillStyleSheet.fillHorizontalWithMargins}>

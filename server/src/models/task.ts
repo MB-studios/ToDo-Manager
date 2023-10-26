@@ -5,7 +5,8 @@ export interface ITask {
 	title: string;
 	description: string;
 	dueDate: Date;
-	completed: boolean;
+	currentDueDate: Date;
+	commingDueDate: Date;
 	completedAt: Date;
 	recurring: boolean;
 	recurringInterval: number;
@@ -35,11 +36,15 @@ const TaskSchema: Schema = new Schema(
 		},
 		dueDate: {
 			type: Date,
-			default: null,
+			default: undefined,
 		},
-		completed: {
-			type: Boolean,
-			default: false,
+		currentDueDate: {
+			type: Date,
+			default: undefined,
+		},
+		commingDueDate: {
+			type: Date,
+			default: undefined,
 		},
 		completedAt: {
 			type: Date,
